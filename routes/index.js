@@ -29,7 +29,7 @@ router.post('/', function (req, res, next) {
 				subject: alert.annotations.summary,
 				html:
 					`<div>${alert.annotations.description}</div>` +
-					`<a href="http://alertmanager:8080/silence/3${qs.slice(0, -1)}">Turn off</a>`,
+					`<a href="http://${process.env.WEBHOOK_SERVER}:${process.env.PORT}/silence/3${qs.slice(0,-1,)}">Turn off</a>`,
 			},
 			(e) => {
 				if (e) res.status(500).json({ result: 'fail' })
@@ -54,7 +54,7 @@ router.get('/silence/:hour', async (req, res, next) => {
 	try {
 		await axios({
 			method: 'POST',
-			url: 'http://alertmanager:9093/api/v2/silences',
+			url: `http://${process.env.ALERTMANAGER_SERVER}:9093/api/v2/silences`,
 			headers: {
 				'Content-Type': 'application/json',
 			},
